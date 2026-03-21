@@ -109,7 +109,7 @@ export default function About() {
           >
             {/* Replace with your actual photo */}
             <Image
-              src="/images/profile.jpeg"
+              src="/images/Profile.jpeg"
               alt="Malik Hashir"
               fill
               style={{ objectFit: "cover" }}

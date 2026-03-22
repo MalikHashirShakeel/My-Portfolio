@@ -1,7 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Download } from "lucide-react";
+import MagneticButton from "./ui/MagneticButton";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { heroRoles } from "@/lib/data";
 
@@ -11,6 +12,8 @@ const NeuralGlobe = dynamic(() => import("./three/NeuralGlobe"), {
 
 export default function Hero() {
   const typedText = useTypewriter(heroRoles, 100, 60, 2000);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, 300]);
 
   return (
     <section
@@ -23,8 +26,8 @@ export default function Hero() {
         overflow: "hidden",
       }}
     >
-      {/* 3D globe behind content */}
-      <div
+      {/* 3D globe behind content with Parallax */}
+      <motion.div
         style={{
           position: "absolute",
           right: "-5%",
@@ -32,11 +35,12 @@ export default function Hero() {
           width: "55%",
           height: "80%",
           opacity: 0.6,
+          y,
         }}
         className="hero-globe"
       >
         <NeuralGlobe />
-      </div>
+      </motion.div>
 
       <div
         className="section-container"
@@ -136,20 +140,24 @@ export default function Hero() {
             marginTop: "0.5rem",
           }}
         >
-          <a href="#projects" className="neon-btn">
-            <ArrowDown size={16} />
-            View Projects
-          </a>
-          <a
-            href="/resume.pdf"
-            download="Malik_Hashir_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="neon-btn neon-btn-purple"
-          >
-            <Download size={16} />
-            Download Resume
-          </a>
+          <MagneticButton>
+            <a href="#projects" className="neon-btn">
+              <ArrowDown size={16} />
+              View Projects
+            </a>
+          </MagneticButton>
+          <MagneticButton>
+            <a
+              href="/resume.pdf"
+              download="Malik_Hashir_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="neon-btn neon-btn-purple"
+            >
+              <Download size={16} />
+              Download Resume
+            </a>
+          </MagneticButton>
         </motion.div>
       </div>
 

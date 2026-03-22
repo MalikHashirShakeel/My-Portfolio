@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink } from "lucide-react";
 import { projects } from "@/lib/data";
+import TiltCard from "./ui/TiltCard";
 
 export default function Projects() {
   const [filter, setFilter] = useState<"all" | "ai" | "fullstack">("all");
@@ -94,23 +95,23 @@ export default function Projects() {
                     type: "spring", stiffness: 200, damping: 20,
                     delay: i * 0.1 
                   }}
-                  whileHover={{ 
-                    y: -12, 
-                    scale: 1.02,
-                    boxShadow: "0 20px 40px rgba(0, 245, 255, 0.15)",
-                    transition: { type: "tween", duration: 0.2 } 
-                  }}
-                  className="glass-card"
-                  style={{
-                    padding: "2rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100%",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
+                  style={{ height: "100%", perspective: "1000px" }}
                 >
-                  {/* Category Accent */}
+                  <TiltCard>
+                    <div
+                      className="glass-card"
+                      style={{
+                        padding: "2rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                        position: "relative",
+                        overflow: "hidden",
+                        border: "1px solid rgba(0, 245, 255, 0.15)",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      {/* Category Accent */}
                   <div
                     style={{
                       position: "absolute",
@@ -215,8 +216,10 @@ export default function Projects() {
                         {tech}
                       </span>
                     ))}
+                    </div>
                   </div>
-                </motion.div>
+                </TiltCard>
+              </motion.div>
               ))}
             </div>
           </AnimatePresence>

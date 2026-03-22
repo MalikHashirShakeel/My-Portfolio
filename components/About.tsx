@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { aboutData } from "@/lib/data";
 import { useCounterAnimation } from "@/hooks/useCounterAnimation";
@@ -51,10 +51,13 @@ function StatCounter({
 }
 
 export default function About() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 2000], [0, 400]);
+
   return (
-    <section id="about" className="circuit-bg" style={{ position: "relative" }}>
+    <section id="about" className="circuit-bg" style={{ position: "relative", overflow: "hidden" }}>
       {/* 3D DNA background */}
-      <div
+      <motion.div
         style={{
           position: "absolute",
           right: 0,
@@ -62,16 +65,17 @@ export default function About() {
           width: "300px",
           height: "100%",
           opacity: 0.15,
+          y,
         }}
         className="about-dna"
       >
         <DNAHelix />
-      </div>
+      </motion.div>
 
       <div className="section-container" style={{ position: "relative", zIndex: 2 }}>
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
@@ -112,6 +116,7 @@ export default function About() {
               src="/images/Profile.jpeg"
               alt="Malik Hashir"
               fill
+              sizes="(max-width: 768px) 180px, 250px"
               style={{ objectFit: "cover" }}
               priority
             />

@@ -1,6 +1,7 @@
 "use client";
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
 import * as THREE from "three";
 
 function NeuralNetwork() {
@@ -56,11 +57,17 @@ function NeuralNetwork() {
     <group ref={groupRef}>
       {nodes.map((pos, i) => (
         <mesh key={i} position={pos}>
-          <sphereGeometry args={[sizes[i], 8, 8]} />
-          <meshBasicMaterial
+          <sphereGeometry args={[sizes[i], 16, 16]} />
+          <meshPhysicalMaterial
             color={i % 3 === 0 ? "#00f5ff" : i % 3 === 1 ? "#bf00ff" : "#ffd700"}
+            emissive={i % 3 === 0 ? "#00f5ff" : i % 3 === 1 ? "#bf00ff" : "#ffd700"}
+            emissiveIntensity={1.2}
             transparent
-            opacity={0.8}
+            opacity={0.9}
+            roughness={0.2}
+            metalness={0.8}
+            clearcoat={1}
+            clearcoatRoughness={0.2}
           />
         </mesh>
       ))}
@@ -71,7 +78,7 @@ function NeuralNetwork() {
             args={[linePositions, 3]}
           />
         </bufferGeometry>
-        <lineBasicMaterial color="#00f5ff" transparent opacity={0.15} />
+        <lineBasicMaterial color="#00f5ff" transparent opacity={0.3} />
       </lineSegments>
     </group>
   );
@@ -80,13 +87,16 @@ function NeuralNetwork() {
 export default function NeuralGlobe() {
   return (
     <div style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
-      <Canvas
+        <Canvas
         camera={{ position: [0, 0, 5], fov: 50 }}
-        style={{ background: "transparent" }}
+        style={{ background: "transparent", pointerEvents: "none" }}
         gl={{ alpha: true, antialias: true }}
       >
         <ambientLight intensity={0.5} />
-        <NeuralNetwork />
+        <Suspense fallback={null}>
+          <Environment preset="city" />
+          <NeuralNetwork />
+        </Suspense>
       </Canvas>
     </div>
   );

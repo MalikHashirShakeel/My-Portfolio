@@ -10,11 +10,13 @@ import Footer from "@/components/Footer";
 import LoadingScreen from "@/components/LoadingScreen";
 import ScrollToTop from "@/components/ScrollToTop";
 import ParticleBackground from "@/components/ParticleBackground";
+import MouseSpotlight from "@/components/ui/MouseSpotlight";
 
 export default function Home() {
   return (
     <>
       <LoadingScreen />
+      <MouseSpotlight />
       <div className="scanline-overlay" />
       <div className="noise-overlay" />
       <ParticleBackground />

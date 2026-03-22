@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { contactInfo, socialLinks, emailjsConfig } from "@/lib/data";
+import TiltCard from "./ui/TiltCard";
 
 export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -129,11 +130,13 @@ export default function Contact() {
               </h4>
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 {socialLinks.map((social) => (
-                  <a
+                  <motion.a
                     key={social.label}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    whileHover={{ scale: 1.2, rotate: 10, color: "#bf00ff", borderColor: "#bf00ff", boxShadow: "0 0 20px rgba(191,0,255,0.4)" }}
+                    whileTap={{ scale: 0.9 }}
                     title={social.label}
                     style={{
                       width: "44px",
@@ -147,19 +150,9 @@ export default function Contact() {
                       color: "#e0e7ff",
                       transition: "all 0.3s ease",
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "#bf00ff";
-                      e.currentTarget.style.color = "#bf00ff";
-                      e.currentTarget.style.boxShadow = "0 0 15px rgba(191,0,255,0.3)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "rgba(148,163,184,0.2)";
-                      e.currentTarget.style.color = "#e0e7ff";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
                   >
                     <social.icon size={20} />
-                  </a>
+                  </motion.a>
                 ))}
               </div>
             </div>
@@ -171,9 +164,13 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="glass-card"
-            style={{ padding: "2.5rem" }}
+            style={{ perspective: "1000px" }}
           >
+            <TiltCard>
+              <div
+                className="glass-card"
+                style={{ padding: "2.5rem", height: "100%" }}
+              >
             <form ref={formRef} onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
               {/* Form fields */}
               <div className="input-group">
@@ -193,15 +190,17 @@ export default function Contact() {
                 <label className="form-label">Your Message</label>
               </div>
 
-              <button
+              <motion.button
                 type="submit"
                 disabled={status === "loading" || status === "success"}
                 className="neon-btn"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
                 style={{ width: "100%", justifyContent: "center", marginTop: "1rem" }}
               >
                 {status === "loading" ? "Transmitting..." : "Send Message"}
                 {status !== "loading" && <Send size={18} />}
-              </button>
+              </motion.button>
 
               {/* Status Messages */}
               {status === "success" && (
@@ -214,8 +213,10 @@ export default function Contact() {
                   <AlertCircle size={20} /> Transmission failed. Please try again or email directly.
                 </div>
               )}
-            </form>
-          </motion.div>
+              </form>
+                </div>
+              </TiltCard>
+            </motion.div>
         </div>
       </div>
 

@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { skillCategories } from "@/lib/data";
+import TiltCard from "./ui/TiltCard";
 
 const FloatingShapes = dynamic(() => import("./three/FloatingShapes"), {
   ssr: false,
@@ -51,13 +52,18 @@ export default function Skills() {
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: catIndex * 0.1 }}
-              whileHover={{
-                borderColor: `${category.color}40`,
-                boxShadow: `0 0 25px ${category.color}15`,
-              }}
-              className="glass-card"
-              style={{ padding: "1.5rem" }}
+              style={{ perspective: "1000px" }}
             >
+              <TiltCard>
+                <div
+                  className="glass-card"
+                  style={{
+                    padding: "1.5rem",
+                    height: "100%",
+                    border: `1px solid ${category.color}20`,
+                    transition: "all 0.3s ease",
+                  }}
+                >
               <h3
                 style={{
                   fontFamily: "var(--font-orbitron)",
@@ -139,6 +145,8 @@ export default function Skills() {
                   </motion.div>
                 ))}
               </div>
+                </div>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { GraduationCap, MapPin } from "lucide-react";
 import { education } from "@/lib/data";
+import TiltCard from "./ui/TiltCard";
 
 export default function Education() {
   return (
@@ -22,16 +23,21 @@ export default function Education() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass-card edu-card"
-          style={{
-            padding: "3rem 2rem",
-            position: "relative",
-            overflow: "hidden",
-            display: "flex",
-            gap: "2rem",
-            alignItems: "center",
-          }}
+          style={{ perspective: "1000px" }}
         >
+          <TiltCard>
+            <div
+              className="glass-card edu-card"
+              style={{
+                padding: "3rem 2rem",
+                position: "relative",
+                overflow: "hidden",
+                display: "flex",
+                gap: "2rem",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
           <div
             style={{
               position: "absolute",
@@ -110,6 +116,8 @@ export default function Education() {
               </span>
             </div>
           </div>
+            </div>
+          </TiltCard>
         </motion.div>
       </div>
 

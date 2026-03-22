@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { aboutData } from "@/lib/data";
 import { useCounterAnimation } from "@/hooks/useCounterAnimation";
+import TiltCard from "./ui/TiltCard";
 
 const DNAHelix = dynamic(() => import("./three/DNAHelix"), { ssr: false });
 
@@ -97,6 +98,7 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 50px rgba(0,245,255,0.3)" }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="about-photo-wrapper"
@@ -109,9 +111,9 @@ export default function About() {
               position: "relative",
               flexShrink: 0,
               boxShadow: "0 0 30px rgba(0,245,255,0.1)",
+              cursor: "pointer",
             }}
           >
-            {/* Replace with your actual photo */}
             <Image
               src="/images/Profile.jpeg"
               alt="Malik Hashir"
@@ -165,12 +167,19 @@ export default function About() {
               key={stat.label}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -10 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 + i * 0.1, type: "spring", stiffness: 100 }}
-              className="glass-card"
-              style={{ padding: "2rem 1rem" }}
+              style={{ perspective: "1000px" }}
             >
-              <StatCounter {...stat} />
+              <TiltCard>
+                <div
+                  className="glass-card"
+                  style={{ padding: "2rem 1rem", height: "100%", width: "100%" }}
+                >
+                  <StatCounter {...stat} />
+                </div>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

@@ -60,8 +60,10 @@ export default function Navbar() {
         }}
       >
         {/* Logo */}
-        <a
+        <motion.a
           href="#"
+          whileHover={{ scale: 1.1, rotate: -2 }}
+          whileTap={{ scale: 0.9 }}
           style={{
             fontFamily: "var(--font-orbitron)",
             fontSize: "1.5rem",
@@ -70,10 +72,11 @@ export default function Navbar() {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             textDecoration: "none",
+            display: "inline-block",
           }}
         >
           MH
-        </a>
+        </motion.a>
 
         {/* Desktop links */}
         <div
@@ -87,9 +90,11 @@ export default function Navbar() {
           {navLinks.map((link) => {
             const isActive = activeSection === link.href.replace("#", "");
             return (
-              <a
+              <motion.a
                 key={link.href}
                 href={link.href}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
                 style={{
                   fontFamily: "var(--font-orbitron)",
                   fontSize: "0.75rem",
@@ -101,15 +106,8 @@ export default function Navbar() {
                   position: "relative",
                   paddingBottom: "4px",
                   transition: "color 0.3s ease",
+                  display: "inline-block",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "#00f5ff")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = isActive
-                    ? "#00f5ff"
-                    : "#94a3b8")
-                }
               >
                 {link.label}
                 {isActive && (
@@ -128,7 +126,7 @@ export default function Navbar() {
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   />
                 )}
-              </a>
+              </motion.a>
             );
           })}
         </div>

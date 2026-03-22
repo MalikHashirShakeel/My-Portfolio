@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Award, ExternalLink } from "lucide-react";
 import { certifications } from "@/lib/data";
+import TiltCard from "./ui/TiltCard";
 
 const CertShield = dynamic(() => import("./three/CertShield"), {
   ssr: false,
@@ -56,19 +57,23 @@ export default function Certifications() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.2 }}
-              whileHover={{ y: -5 }}
-              className="glass-card"
-              style={{
-                padding: "2.5rem 2rem",
-                position: "relative",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                boxShadow: "0 0 20px rgba(191,0,255,0.05)",
-              }}
+              style={{ perspective: "1000px", height: "100%" }}
             >
+              <TiltCard>
+                <div
+                  className="glass-card"
+                  style={{
+                    padding: "2.5rem 2rem",
+                    position: "relative",
+                    overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxShadow: "0 0 20px rgba(191,0,255,0.05)",
+                    height: "100%",
+                  }}
+                >
               {/* Holographic glare effect */}
               <div
                 style={{
@@ -135,7 +140,9 @@ export default function Certifications() {
                 <ExternalLink size={16} />
                 Verify Credential
               </a>
-            </motion.div>
+            </div>
+          </TiltCard>
+        </motion.div>
           ))}
         </div>
       </div>

@@ -78,18 +78,25 @@ export default function Hero() {
             fontWeight: 800,
             lineHeight: 1.1,
             maxWidth: "700px",
+            transformStyle: "preserve-3d",
           }}
         >
-          <span style={{ color: "#e0e7ff" }}>Hi, I&apos;m </span>
-          <span
+          <motion.span 
+            style={{ color: "#e0e7ff", display: "inline-block" }}
+            whileHover={{ translateZ: 20, color: "#fff" }}
+          >Hi, I&apos;m</motion.span>
+          {' '}
+          <motion.span
             style={{
               background: "linear-gradient(135deg, #00f5ff, #bf00ff)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
+              display: "inline-block",
             }}
+            whileHover={{ translateZ: 40, scale: 1.05 }}
           >
             Malik Hashir
-          </span>
+          </motion.span>
         </motion.h1>
 
         <motion.div
@@ -135,28 +142,35 @@ export default function Hero() {
           transition={{ delay: 1.1, duration: 0.6 }}
           style={{
             display: "flex",
-            gap: "1rem",
+            gap: "1.5rem",
             flexWrap: "wrap",
             marginTop: "0.5rem",
           }}
         >
           <MagneticButton>
-            <a href="#projects" className="neon-btn">
+            <motion.a 
+              href="#projects" 
+              className="neon-btn"
+              whileTap={{ scale: 0.9, boxShadow: "0 0 30px var(--cyan)" }}
+              whileHover={{ scale: 1.05 }}
+            >
               <ArrowDown size={16} />
               View Projects
-            </a>
+            </motion.a>
           </MagneticButton>
           <MagneticButton>
-            <a
+            <motion.a
               href="/resume.pdf"
               download="Malik_Hashir_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="neon-btn neon-btn-purple"
+              whileTap={{ scale: 0.9, boxShadow: "0 0 30px var(--purple)" }}
+              whileHover={{ scale: 1.05 }}
             >
               <Download size={16} />
               Download Resume
-            </a>
+            </motion.a>
           </MagneticButton>
         </motion.div>
       </div>

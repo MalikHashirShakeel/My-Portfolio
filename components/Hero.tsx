@@ -1,19 +1,14 @@
 "use client";
-import dynamic from "next/dynamic";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowDown, Download } from "lucide-react";
-import MagneticButton from "./ui/MagneticButton";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { heroRoles } from "@/lib/data";
-
-const NeuralGlobe = dynamic(() => import("./three/NeuralGlobe"), {
-  ssr: false,
-});
+import NeuralNetwork from "./NeuralNetwork";
+import GlitchText from "./GlitchText";
+import MagneticButton from "./MagneticButton";
 
 export default function Hero() {
   const typedText = useTypewriter(heroRoles, 100, 60, 2000);
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, 300]);
 
   return (
     <section
@@ -24,201 +19,178 @@ export default function Hero() {
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
+        background: "radial-gradient(circle at 10% 20%, rgba(13, 33, 55, 0.3) 0%, transparent 50%)"
       }}
     >
-      {/* 3D globe behind content with Parallax */}
-      <motion.div
-        style={{
-          position: "absolute",
-          right: "-5%",
-          top: "10%",
-          width: "55%",
-          height: "80%",
-          opacity: 0.6,
-          y,
-        }}
-        className="hero-globe"
-      >
-        <NeuralGlobe />
-      </motion.div>
-
       <div
-        className="section-container"
+        className="section-container hero-flex-container"
         style={{
           position: "relative",
           zIndex: 2,
           width: "100%",
           display: "flex",
-          flexDirection: "column",
-          gap: "1.5rem",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "2rem",
           paddingTop: "6rem",
         }}
       >
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          style={{
-            fontFamily: "Courier New, monospace",
-            fontSize: "0.9rem",
-            color: "#00f5ff",
-            letterSpacing: "0.1em",
-          }}
-        >
-          {"// Welcome to my portfolio"}
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          style={{
-            fontFamily: "var(--font-orbitron)",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-            fontWeight: 800,
-            lineHeight: 1.1,
-            maxWidth: "700px",
-            transformStyle: "preserve-3d",
-          }}
-        >
-          <motion.span 
-            style={{ color: "#e0e7ff", display: "inline-block" }}
-            whileHover={{ translateZ: 20, color: "#fff" }}
-          >Hi, I&apos;m</motion.span>
-          {' '}
-          <motion.span
+        {/* Left Side: Text and CTAs */}
+        <div style={{ flex: "1 1 55%", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          
+          {/* Monospace label */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
             style={{
-              background: "linear-gradient(135deg, #00f5ff, #bf00ff)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              display: "inline-block",
+              fontFamily: "var(--font-jetbrains-mono), monospace",
+              fontSize: "0.85rem",
+              color: "#00E5FF",
+              letterSpacing: "0.15em",
+              display: "flex",
+              alignItems: "center"
             }}
-            whileHover={{ translateZ: 40, scale: 1.05 }}
           >
-            Malik Hashir
-          </motion.span>
-        </motion.h1>
+            <span>{typedText}</span>
+            <span className="cursor-blink" style={{ fontWeight: "bold", marginLeft: "2px" }}>|</span>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          style={{
-            fontFamily: "var(--font-orbitron)",
-            fontSize: "clamp(1rem, 2.5vw, 1.5rem)",
-            fontWeight: 500,
-            color: "#ffd700",
-            minHeight: "2.2rem",
-          }}
-        >
-          {typedText}
-          <motion.span
-            animate={{ opacity: [0, 1, 0] }}
-            transition={{ duration: 0.8, repeat: Infinity }}
-            style={{ color: "#00f5ff", marginLeft: "2px" }}
+          {/* Huge Space Grotesk Name */}
+          <motion.h1
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            style={{
+              fontFamily: "var(--font-space-grotesk), sans-serif",
+              fontSize: "clamp(3rem, 7vw, 5.5rem)",
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: "-0.03em"
+            }}
           >
-            |
-          </motion.span>
-        </motion.div>
+            <span style={{ color: "#E2E8F0", display: "block" }}>
+              <GlitchText>Malik Hashir</GlitchText>
+            </span>
+          </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          style={{
-            fontSize: "1.05rem",
-            color: "#94a3b8",
-            maxWidth: "550px",
-            lineHeight: 1.7,
+          {/* Tagline Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            style={{
+              fontSize: "1.1rem",
+              color: "#94A3B8",
+              maxWidth: "520px",
+              lineHeight: 1.7,
+              fontFamily: "var(--font-inter), sans-serif"
+            }}
+          >
+            Building intelligent systems at the intersection of AI, Deep Learning,
+            and modern software engineering.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            style={{
+              display: "flex",
+              gap: "1.25rem",
+              flexWrap: "wrap",
+              marginTop: "0.75rem",
+            }}
+          >
+            <MagneticButton>
+              <a href="#projects" className="btn-primary">
+                Explore My Work
+                <ArrowDown size={16} />
+              </a>
+            </MagneticButton>
+            <MagneticButton>
+              <a
+                href="/resume.pdf"
+                download="Malik_Hashir_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+              >
+                Download CV
+                <Download size={16} />
+              </a>
+            </MagneticButton>
+          </motion.div>
+        </div>
+
+        {/* Right Side: Animated Interactive Neural Network Canvas */}
+        <div 
+          className="hero-orbit-container"
+          style={{ 
+            flex: "1 1 40%", 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center",
+            height: "450px",
+            width: "100%",
+            position: "relative"
           }}
         >
-          Building intelligent systems at the intersection of AI, Deep Learning,
-          and modern software engineering.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.6 }}
-          style={{
-            display: "flex",
-            gap: "1.5rem",
-            flexWrap: "wrap",
-            marginTop: "0.5rem",
-          }}
-        >
-          <MagneticButton>
-            <motion.a 
-              href="#projects" 
-              className="neon-btn"
-              whileTap={{ scale: 0.9, boxShadow: "0 0 30px var(--cyan)" }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <ArrowDown size={16} />
-              View Projects
-            </motion.a>
-          </MagneticButton>
-          <MagneticButton>
-            <motion.a
-              href="/resume.pdf"
-              download="Malik_Hashir_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="neon-btn neon-btn-purple"
-              whileTap={{ scale: 0.9, boxShadow: "0 0 30px var(--purple)" }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <Download size={16} />
-              Download Resume
-            </motion.a>
-          </MagneticButton>
-        </motion.div>
+          <NeuralNetwork />
+        </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator bouncing chevron */}
       <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "absolute",
-          bottom: "2rem",
+          bottom: "2.5rem",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "0.5rem",
+          gap: "0.25rem",
+          cursor: "pointer",
+          zIndex: 5
         }}
+        onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
       >
         <span
           style={{
-            fontFamily: "var(--font-orbitron)",
+            fontFamily: "var(--font-jetbrains-mono)",
             fontSize: "0.6rem",
-            color: "#64748b",
-            letterSpacing: "0.15em",
+            color: "#475569",
+            letterSpacing: "0.25em",
             textTransform: "uppercase",
           }}
         >
-          Scroll
+          Explore
         </span>
-        <div
-          style={{
-            width: "1px",
-            height: "30px",
-            background: "linear-gradient(to bottom, #00f5ff, transparent)",
-          }}
-        />
+        <ArrowDown size={14} style={{ color: "#00B4D8" }} />
       </motion.div>
 
       <style jsx global>{`
-        @media (max-width: 768px) {
-          .hero-globe {
-            position: absolute !important;
-            right: -20% !important;
-            top: 5% !important;
-            width: 80% !important;
-            height: 60% !important;
-            opacity: 0.3 !important;
+        @media (max-width: 991px) {
+          .hero-flex-container {
+            flex-direction: column !important;
+            text-align: center;
+            padding-bottom: 4rem;
+          }
+          .hero-flex-container > div {
+            flex: 1 1 100% !important;
+            align-items: center;
+          }
+          .hero-flex-container p {
+            margin: 0 auto;
+          }
+          .hero-orbit-container {
+            margin-top: 2rem;
+            order: 2;
           }
         }
       `}</style>

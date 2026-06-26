@@ -1,51 +1,48 @@
 "use client";
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Award, ExternalLink } from "lucide-react";
 import { certifications } from "@/lib/data";
-import TiltCard from "./ui/TiltCard";
-
-const CertShield = dynamic(() => import("./three/CertShield"), {
-  ssr: false,
-});
 
 export default function Certifications() {
   return (
-    <section id="certifications" style={{ position: "relative" }}>
-      {/* 3D Shield Background */}
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: "10%",
-          width: "400px",
-          height: "100%",
-          opacity: 0.15,
-        }}
-        className="cert-3d"
-      >
-        <CertShield />
-      </div>
-
+    <section 
+      id="certifications" 
+      style={{ 
+        position: "relative", 
+        overflow: "hidden",
+        background: "var(--bg-navy)"
+      }}
+      className="grid-pattern-overlay"
+    >
       <div className="section-container" style={{ position: "relative", zIndex: 2 }}>
+        
+        {/* Section Divider Line above */}
+        <div className="section-divider" style={{ position: "absolute", top: 0, left: 0 }} />
+
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
+          style={{ marginBottom: "3.5rem" }}
         >
-          <h2 className="section-title">Certifications</h2>
-          <p className="section-subtitle">
-            Professional specializations proving my expertise in Machine Learning
-            and Deep Learning.
-          </p>
-          <div className="accent-line" style={{ marginBottom: "3rem" }} />
+          <span className="section-label">// CERTIFICATIONS_LOG</span>
+          <h2 
+            style={{ 
+              fontFamily: "var(--font-space-grotesk)", 
+              fontSize: "2.5rem", 
+              fontWeight: 700,
+              color: "#E2E8F0"
+            }}
+          >
+            Specializations
+          </h2>
         </motion.div>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
             gap: "2rem",
             justifyContent: "center",
           }}
@@ -53,107 +50,99 @@ export default function Certifications() {
           {certifications.map((cert, i) => (
             <motion.div
               key={cert.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.2 }}
-              style={{ perspective: "1000px", height: "100%" }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              style={{ height: "100%" }}
             >
-              <TiltCard>
+              <div
+                className="glass-card"
+                style={{
+                  padding: "2.5rem 2rem",
+                  position: "relative",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  height: "100%",
+                }}
+              >
+                {/* Radial Glow Behind Icon */}
                 <div
-                  className="glass-card"
                   style={{
-                    padding: "2.5rem 2rem",
-                    position: "relative",
-                    overflow: "hidden",
+                    position: "absolute",
+                    top: "10%",
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "50%",
+                    background: "radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%)",
+                    pointerEvents: "none",
+                  }}
+                />
+
+                <div
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    borderRadius: "50%",
+                    background: "rgba(168, 85, 247, 0.1)",
+                    border: "1px solid rgba(168, 85, 247, 0.3)",
                     display: "flex",
-                    flexDirection: "column",
                     alignItems: "center",
-                    textAlign: "center",
-                    boxShadow: "0 0 20px rgba(191,0,255,0.05)",
-                    height: "100%",
+                    justifyContent: "center",
+                    marginBottom: "1.5rem",
+                    color: "#A855F7",
+                    boxShadow: "0 0 15px rgba(168, 85, 247, 0.2)",
                   }}
                 >
-              {/* Holographic glare effect */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(125deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 100%)",
-                  pointerEvents: "none",
-                }}
-              />
+                  <Award size={26} />
+                </div>
 
-              <div
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  borderRadius: "50%",
-                  background: "rgba(191,0,255,0.1)",
-                  border: "1px solid rgba(191,0,255,0.3)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "1.5rem",
-                  color: "#bf00ff",
-                  boxShadow: "0 0 15px rgba(191,0,255,0.2)",
-                }}
-              >
-                <Award size={30} />
+                <h3
+                  style={{
+                    fontFamily: "var(--font-space-grotesk)",
+                    fontSize: "1.2rem",
+                    color: "#E2E8F0",
+                    marginBottom: "0.5rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  {cert.title}
+                </h3>
+
+                <p
+                  style={{
+                    color: "#00E5FF",
+                    fontWeight: 500,
+                    fontSize: "0.95rem",
+                    marginBottom: "0.25rem",
+                    fontFamily: "var(--font-space-grotesk)"
+                  }}
+                >
+                  {cert.issuer}
+                </p>
+
+                <p style={{ color: "#94A3B8", fontSize: "0.85rem", marginBottom: "2rem", flexGrow: 1 }}>
+                  Platform: {cert.platform} · Instructor: {cert.instructor}
+                </p>
+
+                <a
+                  href={cert.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                  style={{ padding: "0.5rem 1.25rem", fontSize: "0.8rem" }}
+                >
+                  Verify Credential
+                  <ExternalLink size={14} />
+                </a>
               </div>
-
-              <h3
-                style={{
-                  fontFamily: "var(--font-orbitron)",
-                  fontSize: "1.2rem",
-                  color: "#e0e7ff",
-                  marginBottom: "0.5rem",
-                  fontWeight: 600,
-                }}
-              >
-                {cert.title}
-              </h3>
-
-              <p
-                style={{
-                  color: "#00f5ff",
-                  fontWeight: 500,
-                  fontSize: "1.05rem",
-                  marginBottom: "0.25rem",
-                }}
-              >
-                {cert.issuer}
-              </p>
-
-              <p style={{ color: "#94a3b8", fontSize: "0.9rem", marginBottom: "2rem" }}>
-                Instructor: {cert.instructor}
-              </p>
-
-              <a
-                href={cert.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="neon-btn neon-btn-purple"
-                style={{ marginTop: "2rem", padding: "0.5rem 1.5rem" }}
-              >
-                <ExternalLink size={16} />
-                Verify Credential
-              </a>
-            </div>
-          </TiltCard>
-        </motion.div>
+            </motion.div>
           ))}
         </div>
       </div>
-
-      <style jsx global>{`
-        @media (max-width: 768px) {
-          .cert-3d {
-            display: none !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

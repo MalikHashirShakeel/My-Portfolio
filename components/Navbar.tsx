@@ -13,16 +13,25 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
+      // Simple active section detection
+      const scrollPosition = window.scrollY + 160;
       const sections = navLinks.map((l) => l.href.replace("#", ""));
-      for (const id of sections.reverse()) {
+      
+      for (const id of sections) {
         const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= 150) {
-          setActiveSection(id);
-          break;
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(id);
+            break;
+          }
         }
       }
     };
+    
     window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Call once on mount to set correct state
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -37,42 +46,43 @@ export default function Navbar() {
         left: 0,
         right: 0,
         zIndex: 1000,
-        padding: "0 1.5rem",
-        transition: "all 0.3s ease",
+        padding: "0 2rem",
+        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         background: scrolled
-          ? "rgba(2, 8, 23, 0.85)"
-          : "rgba(2, 8, 23, 0.4)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
+          ? "rgba(6, 11, 26, 0.85)"
+          : "transparent",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         borderBottom: scrolled
-          ? "1px solid rgba(0,245,255,0.1)"
+          ? "1px solid rgba(0, 229, 255, 0.08)"
           : "1px solid transparent",
       }}
     >
       <div
         style={{
-          maxWidth: "1280px",
+          maxWidth: "1200px",
           margin: "0 auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          height: "4rem",
+          height: "4.5rem",
         }}
       >
         {/* Logo */}
         <motion.a
           href="#"
-          whileHover={{ scale: 1.1, rotate: -2 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           style={{
-            fontFamily: "var(--font-orbitron)",
-            fontSize: "1.5rem",
+            fontFamily: "var(--font-space-grotesk)",
+            fontSize: "1.6rem",
             fontWeight: 700,
-            background: "linear-gradient(135deg, #00f5ff, #bf00ff)",
+            background: "linear-gradient(135deg, #00E5FF 0%, #A855F7 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             textDecoration: "none",
             display: "inline-block",
+            letterSpacing: "-0.02em"
           }}
         >
           MH
@@ -82,7 +92,7 @@ export default function Navbar() {
         <div
           style={{
             display: "flex",
-            gap: "2rem",
+            gap: "2.25rem",
             alignItems: "center",
           }}
           className="nav-desktop"
@@ -93,18 +103,16 @@ export default function Navbar() {
               <motion.a
                 key={link.href}
                 href={link.href}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
                 style={{
-                  fontFamily: "var(--font-orbitron)",
-                  fontSize: "0.75rem",
+                  fontFamily: "var(--font-space-grotesk)",
+                  fontSize: "13px",
                   fontWeight: 500,
-                  letterSpacing: "0.05em",
+                  letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  color: isActive ? "#00f5ff" : "#94a3b8",
+                  color: isActive ? "#00E5FF" : "#94A3B8",
                   textDecoration: "none",
                   position: "relative",
-                  paddingBottom: "4px",
+                  padding: "6px 0",
                   transition: "color 0.3s ease",
                   display: "inline-block",
                 }}
@@ -119,11 +127,10 @@ export default function Navbar() {
                       left: 0,
                       right: 0,
                       height: "2px",
-                      background:
-                        "linear-gradient(90deg, #00f5ff, #bf00ff)",
+                      background: "#00B4D8",
                       borderRadius: "1px",
                     }}
-                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
               </motion.a>
@@ -139,9 +146,10 @@ export default function Navbar() {
             display: "none",
             background: "none",
             border: "none",
-            color: "#e0e7ff",
+            color: "#E2E8F0",
             cursor: "pointer",
             padding: "0.25rem",
+            zIndex: 1100,
           }}
           aria-label="Toggle menu"
         >
@@ -152,58 +160,76 @@ export default function Navbar() {
       {/* Mobile drawer */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="nav-mobile-drawer"
-            style={{
-              position: "fixed",
-              top: "4rem",
-              right: 0,
-              bottom: 0,
-              width: "280px",
-              background: "rgba(2, 8, 23, 0.95)",
-              backdropFilter: "blur(20px)",
-              borderLeft: "1px solid rgba(0,245,255,0.1)",
-              display: "flex",
-              flexDirection: "column",
-              padding: "2rem",
-              gap: "1.5rem",
-            }}
-          >
-            {navLinks.map((link, i) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.08 }}
-                style={{
-                  fontFamily: "var(--font-orbitron)",
-                  fontSize: "0.85rem",
-                  fontWeight: 500,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color:
-                    activeSection === link.href.replace("#", "")
-                      ? "#00f5ff"
-                      : "#94a3b8",
-                  textDecoration: "none",
-                  padding: "0.5rem 0",
-                  borderBottom: "1px solid rgba(0,245,255,0.05)",
-                }}
-              >
-                {link.label}
-              </motion.a>
-            ))}
-          </motion.div>
+          <>
+            {/* Backdrop overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(6, 11, 26, 0.6)",
+                backdropFilter: "blur(4px)",
+                zIndex: 1050,
+              }}
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="nav-mobile-drawer"
+              style={{
+                position: "fixed",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: "280px",
+                background: "rgba(10, 22, 40, 0.95)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                borderLeft: "1px solid rgba(0, 228, 255, 0.12)",
+                display: "flex",
+                flexDirection: "column",
+                padding: "6rem 2rem 2rem",
+                gap: "1.75rem",
+                zIndex: 1080,
+              }}
+            >
+              {navLinks.map((link, i) => (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  style={{
+                    fontFamily: "var(--font-space-grotesk)",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color:
+                      activeSection === link.href.replace("#", "")
+                        ? "#00E5FF"
+                        : "#94A3B8",
+                    textDecoration: "none",
+                    padding: "0.5rem 0",
+                    borderBottom: "1px solid rgba(0, 228, 255, 0.05)",
+                  }}
+                >
+                  {link.label}
+                </motion.a>
+              ))}
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
-      {/* Responsive CSS */}
       <style jsx global>{`
         @media (max-width: 768px) {
           .nav-desktop {

@@ -1,164 +1,157 @@
 "use client";
-import dynamic from "next/dynamic";
+
 import { motion } from "framer-motion";
 import { skillCategories } from "@/lib/data";
-import TiltCard from "./ui/TiltCard";
-
-const FloatingShapes = dynamic(() => import("./three/FloatingShapes"), {
-  ssr: false,
-});
+import { MeteorShootIn } from "./SectionAnimations";
 
 export default function Skills() {
   return (
-    <section id="skills" style={{ position: "relative" }}>
-      {/* Floating 3D shapes */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          opacity: 0.2,
-        }}
-        className="skills-3d"
-      >
-        <FloatingShapes />
-      </div>
-
+    <section 
+      id="skills" 
+      style={{ 
+        position: "relative", 
+        overflow: "hidden",
+        background: "var(--bg-navy)"
+      }}
+      className="grid-pattern-overlay"
+    >
       <div className="section-container" style={{ position: "relative", zIndex: 2 }}>
+        
+        {/* Section Divider Line above */}
+        <div className="section-divider" style={{ position: "absolute", top: 0, left: 0 }} />
+
         <motion.div
-          initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
+          style={{ marginBottom: "3.5rem" }}
         >
-          <h2 className="section-title">Skills & Expertise</h2>
-          <p className="section-subtitle">
-            Technologies and concepts I&apos;ve mastered across AI/ML, full-stack
-            development, and beyond.
-          </p>
-          <div className="accent-line" style={{ marginBottom: "3rem" }} />
+          <span className="section-label">// SKILL_MAP</span>
+          <h2 
+            style={{ 
+              fontFamily: "var(--font-space-grotesk)", 
+              fontSize: "2.5rem", 
+              fontWeight: 700,
+              color: "#E2E8F0"
+            }}
+          >
+            Constellation Grid
+          </h2>
         </motion.div>
 
+        {/* Constellation Clusters Grid */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "1.5rem",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "2rem",
           }}
+          className="skills-constellations"
         >
           {skillCategories.map((category, catIndex) => (
             <motion.div
               key={category.title}
-              initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: catIndex * 0.1 }}
-              style={{ perspective: "1000px" }}
+              transition={{ duration: 0.5, delay: catIndex * 0.08 }}
+              className="glass-card"
+              style={{
+                padding: "2rem",
+                border: "1px solid rgba(0, 229, 255, 0.08)",
+                boxShadow: "0 4px 20px rgba(6, 11, 26, 0.4)",
+                position: "relative",
+              }}
             >
-              <TiltCard>
-                <div
-                  className="glass-card"
-                  style={{
-                    padding: "1.5rem",
-                    height: "100%",
-                    border: `1px solid ${category.color}20`,
-                    transition: "all 0.3s ease",
-                  }}
-                >
+              {/* Nebula/Cluster Glowing Background Behind Header */}
+              <div 
+                style={{
+                  position: "absolute",
+                  top: "10%",
+                  left: "10%",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${category.color}15 0%, transparent 70%)`,
+                  pointerEvents: "none",
+                  zIndex: 0
+                }}
+              />
+
+              {/* Glowing Cluster Title */}
               <h3
                 style={{
-                  fontFamily: "var(--font-orbitron)",
-                  fontSize: "0.9rem",
+                  fontFamily: "var(--font-space-grotesk)",
+                  fontSize: "1rem",
                   fontWeight: 600,
                   color: category.color,
-                  marginBottom: "1.25rem",
-                  letterSpacing: "0.05em",
+                  marginBottom: "1.5rem",
+                  letterSpacing: "0.1em",
                   textTransform: "uppercase",
+                  textShadow: `0 0 10px ${category.color}40`,
+                  position: "relative",
+                  zIndex: 1
                 }}
               >
                 {category.title}
               </h3>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
+              {/* Constellation chips container */}
+              <div 
+                style={{ 
+                  display: "flex", 
+                  flexWrap: "wrap", 
+                  gap: "0.75rem",
+                  position: "relative",
+                  zIndex: 1
+                }}
+              >
                 {category.skills.map((skill, skillIndex) => (
-                  <motion.div
+                  <MeteorShootIn
                     key={skill.name}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.4,
-                      delay: catIndex * 0.1 + skillIndex * 0.05,
+                    index={skillIndex}
+                    catIndex={catIndex}
+                    style={{
+                      background: "rgba(13, 33, 55, 0.5)",
+                      border: "1px solid rgba(0, 180, 216, 0.12)",
+                      borderRadius: "8px",
+                      padding: "0.5rem 0.75rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      cursor: "default",
+                      transition: "border-color 0.3s, box-shadow 0.3s"
                     }}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginBottom: "0.35rem",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                        {skill.icon && (
-                          <skill.icon size={14} style={{ color: category.color, opacity: 0.7 }} />
-                        )}
-                        <span style={{ fontSize: "0.85rem", color: "#e0e7ff" }}>
-                          {skill.name}
-                        </span>
-                      </div>
-                      <span
-                        style={{
-                          fontFamily: "Courier New, monospace",
-                          fontSize: "0.7rem",
-                          color: "#64748b",
-                        }}
-                      >
-                        {skill.level}%
-                      </span>
-                    </div>
-                    {/* Progress bar */}
-                    <div
-                      style={{
-                        height: "3px",
-                        background: "rgba(255,255,255,0.05)",
-                        borderRadius: "2px",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{
-                          duration: 1,
-                          delay: catIndex * 0.1 + skillIndex * 0.05,
-                          ease: "easeOut",
-                        }}
-                        style={{
-                          height: "100%",
-                          background: `linear-gradient(90deg, ${category.color}, ${category.color}80)`,
-                          borderRadius: "2px",
-                          boxShadow: `0 0 8px ${category.color}40`,
-                        }}
+                    {skill.icon ? (
+                      <skill.icon size={15} style={{ color: "#00E5FF" }} />
+                    ) : (
+                      <div 
+                        style={{ 
+                          width: "6px", 
+                          height: "6px", 
+                          borderRadius: "50%", 
+                          background: category.color 
+                        }} 
                       />
-                    </div>
-                  </motion.div>
+                    )}
+                    <span 
+                      style={{ 
+                        fontSize: "0.85rem", 
+                        color: "#E2E8F0",
+                        fontFamily: "var(--font-inter)" 
+                      }}
+                    >
+                      {skill.name}
+                    </span>
+                  </MeteorShootIn>
                 ))}
               </div>
-                </div>
-              </TiltCard>
             </motion.div>
           ))}
         </div>
       </div>
-
-      <style jsx global>{`
-        @media (max-width: 768px) {
-          .skills-3d {
-            display: none !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

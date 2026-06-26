@@ -1,27 +1,35 @@
 import type { Metadata } from "next";
-import { Orbitron, Exo_2 } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const orbitron = Orbitron({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-orbitron",
+  variable: "--font-space-grotesk",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const exo2 = Exo_2({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-exo2",
+  variable: "--font-inter",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Malik Hashir | AI Engineer & Deep Learning Specialist",
+  title: "Malik Hashir | AI / ML Engineer & Deep Learning Specialist",
   description:
-    "Portfolio of Malik Hashir — AI Engineer, Deep Learning Specialist, and System Builder. Specializing in Machine Learning, Neural Networks, and Full-Stack Development.",
+    "Portfolio of Malik Hashir — AI / ML Engineer, Deep Learning Specialist, and System Builder. Specializing in Machine Learning, Neural Networks, and Full-Stack Development.",
   keywords: [
     "AI Engineer",
+    "ML Engineer",
     "Deep Learning",
     "Machine Learning",
     "Portfolio",
@@ -32,17 +40,17 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Malik Hashir" }],
   openGraph: {
-    title: "Malik Hashir | AI Engineer & Deep Learning Specialist",
+    title: "Malik Hashir | AI / ML Engineer & Deep Learning Specialist",
     description:
-      "Portfolio of Malik Hashir — AI Engineer, Deep Learning Specialist, and System Builder.",
+      "Portfolio of Malik Hashir — AI / ML Engineer, Deep Learning Specialist, and System Builder.",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Malik Hashir | AI Engineer & Deep Learning Specialist",
+    title: "Malik Hashir | AI / ML Engineer & Deep Learning Specialist",
     description:
-      "Portfolio of Malik Hashir — AI Engineer, Deep Learning Specialist, and System Builder.",
+      "Portfolio of Malik Hashir — AI / ML Engineer, Deep Learning Specialist, and System Builder.",
   },
 };
 
@@ -52,10 +60,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${orbitron.variable} ${exo2.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <body
-        className={exo2.className}
-        style={{ fontFamily: "var(--font-exo2), sans-serif" }}
+        className={inter.className}
+        style={{ fontFamily: "var(--font-inter), sans-serif" }}
       >
         {children}
       </body>

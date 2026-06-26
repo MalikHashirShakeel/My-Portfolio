@@ -5,46 +5,61 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: "rgba(2, 8, 23, 0.9)",
-        borderTop: "1px solid rgba(0,245,255,0.1)",
-        padding: "4rem 1.5rem 2rem",
+        background: "#060B1A",
+        padding: "4rem 1.5rem 2.5rem",
         textAlign: "center",
+        position: "relative"
       }}
     >
+      {/* Subtle star divider line above */}
+      <div 
+        style={{ 
+          position: "absolute", 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          height: "1px",
+          background: "linear-gradient(90deg, transparent, #00B4D8, transparent)",
+          opacity: 0.25 
+        }} 
+      />
+
       <div
         style={{
-          maxWidth: "1280px",
+          maxWidth: "1200px",
           margin: "0 auto",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "2rem",
+          gap: "1.75rem",
         }}
       >
         <div
           style={{
-            fontFamily: "var(--font-orbitron)",
-            fontSize: "2rem",
-            fontWeight: 800,
-            background: "linear-gradient(135deg, #00f5ff, #bf00ff)",
+            fontFamily: "var(--font-space-grotesk)",
+            fontSize: "1.75rem",
+            fontWeight: 700,
+            background: "linear-gradient(135deg, #00E5FF 0%, #A855F7 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            letterSpacing: "0.1em",
+            backgroundClip: "text",
+            letterSpacing: "-0.02em",
           }}
         >
-          MH
+          Malik Hashir
         </div>
 
         <p
           style={{
-            color: "#94a3b8",
-            fontSize: "1rem",
-            maxWidth: "400px",
+            color: "#94A3B8",
+            fontSize: "0.95rem",
+            fontFamily: "var(--font-inter)",
           }}
         >
-          Built with passion for Artificial Intelligence and modern web engineering.
+          Built in the cosmos. Specializing in Deep Learning and Intelligent Systems.
         </p>
 
+        {/* Social Icons Row */}
         <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center" }}>
           {socialLinks.map((social) => (
             <a
@@ -54,36 +69,35 @@ export default function Footer() {
               rel="noopener noreferrer"
               title={social.label}
               style={{
-                color: "#64748b",
-                transition: "color 0.3s ease",
+                color: "#475569",
+                transition: "all 0.3s ease",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#00f5ff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#64748b")}
+              className="footer-social-icon"
             >
-              <social.icon size={24} />
+              <social.icon size={22} />
             </a>
           ))}
         </div>
 
-        <div
-          style={{
-            width: "100%",
-            height: "1px",
-            background: "linear-gradient(90deg, transparent, rgba(0,245,255,0.2), transparent)",
-            margin: "1rem 0",
-          }}
-        />
-
+        {/* Copyright */}
         <p
           style={{
-            fontFamily: "Courier New, monospace",
-            fontSize: "0.85rem",
-            color: "#64748b",
+            fontFamily: "var(--font-jetbrains-mono)",
+            fontSize: "0.8rem",
+            color: "#475569",
+            marginTop: "1rem"
           }}
         >
           &copy; {new Date().getFullYear()} Malik Hashir. All rights reserved.
         </p>
       </div>
+
+      <style jsx global>{`
+        .footer-social-icon:hover {
+          color: #00E5FF !important;
+          transform: translateY(-2px);
+        }
+      `}</style>
     </footer>
   );
 }

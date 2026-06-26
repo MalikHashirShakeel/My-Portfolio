@@ -2,122 +2,159 @@
 import { motion } from "framer-motion";
 import { GraduationCap, MapPin } from "lucide-react";
 import { education } from "@/lib/data";
-import TiltCard from "./ui/TiltCard";
 
 export default function Education() {
   return (
-    <section id="education" className="circuit-bg">
-      <div className="section-container" style={{ maxWidth: "800px" }}>
+    <section 
+      id="education" 
+      style={{ 
+        position: "relative", 
+        overflow: "hidden", 
+        background: "var(--bg-space)"
+      }}
+    >
+      <div className="section-container" style={{ maxWidth: "800px", position: "relative", zIndex: 2 }}>
+        
+        {/* Section Divider Line above */}
+        <div className="section-divider" style={{ position: "absolute", top: 0, left: 0 }} />
+
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
+          style={{ marginBottom: "3.5rem" }}
         >
-          <h2 className="section-title">Education</h2>
-          <div className="accent-line" style={{ marginBottom: "3rem" }} />
+          <span className="section-label">// EDUCATION</span>
+          <h2 
+            style={{ 
+              fontFamily: "var(--font-space-grotesk)", 
+              fontSize: "2.5rem", 
+              fontWeight: 700,
+              color: "#E2E8F0"
+            }}
+          >
+            Academic Journey
+          </h2>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.5, boxShadow: "0 0 0px rgba(0, 229, 255, 0)" }}
+          whileInView={{ opacity: 1, scale: 1, boxShadow: "0 0 35px rgba(0, 229, 255, 0.25)" }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          style={{ perspective: "1000px" }}
+          transition={{ type: "spring", stiffness: 90, damping: 15, duration: 0.8 }}
         >
-          <TiltCard>
-            <div
-              className="glass-card edu-card"
-              style={{
-                padding: "3rem 2rem",
-                position: "relative",
-                overflow: "hidden",
-                display: "flex",
-                gap: "2rem",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
           <div
+            className="glass-card edu-card"
             style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: "4px",
-              background: "linear-gradient(to bottom, #00f5ff, #bf00ff)",
-            }}
-          />
-
-          <div
-            className="edu-icon-wrap"
-            style={{
-              width: "80px",
-              height: "80px",
-              borderRadius: "50%",
-              background: "rgba(0,245,255,0.1)",
-              border: "1px solid rgba(0,245,255,0.3)",
+              padding: "3rem 2rem",
+              position: "relative",
+              overflow: "hidden",
               display: "flex",
+              gap: "2.5rem",
               alignItems: "center",
-              justifyContent: "center",
-              color: "#00f5ff",
-              flexShrink: 0,
+              height: "100%",
             }}
           >
-            <GraduationCap size={40} />
-          </div>
-
-          <div>
-            <h3
-              style={{
-                fontFamily: "var(--font-orbitron)",
-                fontSize: "1.4rem",
-                color: "#e0e7ff",
-                marginBottom: "0.5rem",
-              }}
-            >
-              {education.degree}
-            </h3>
-            <p
-              style={{
-                color: "#00f5ff",
-                fontSize: "1.1rem",
-                fontWeight: 500,
-                marginBottom: "0.5rem",
-              }}
-            >
-              {education.university}
-            </p>
+            {/* Left Accent Glow Line */}
             <div
               style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: "4px",
+                background: "linear-gradient(to bottom, #00E5FF, #A855F7)",
+              }}
+            />
+
+            {/* University Logo Placeholder / Graduation Icon */}
+            <div
+              className="edu-icon-wrap"
+              style={{
+                width: "72px",
+                height: "72px",
+                borderRadius: "50%",
+                background: "rgba(0, 180, 216, 0.08)",
+                border: "1px solid rgba(0, 180, 216, 0.3)",
                 display: "flex",
                 alignItems: "center",
-                gap: "1.5rem",
-                color: "#94a3b8",
-                fontSize: "0.9rem",
+                justifyContent: "center",
+                color: "#00E5FF",
+                flexShrink: 0,
+                boxShadow: "0 0 15px rgba(0, 180, 216, 0.2)"
               }}
-              className="edu-meta"
             >
-              <span style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-                <MapPin size={14} />
-                {education.location}
-              </span>
-              <span
+              <GraduationCap size={36} />
+            </div>
+
+            <div>
+              <h3
                 style={{
-                  fontFamily: "Courier New, monospace",
-                  background: "rgba(191,0,255,0.1)",
-                  color: "#bf00ff",
-                  padding: "0.1rem 0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid rgba(191,0,255,0.2)",
+                  fontFamily: "var(--font-space-grotesk)",
+                  fontSize: "1.35rem",
+                  color: "#E2E8F0",
+                  marginBottom: "0.5rem",
+                  fontWeight: 600
                 }}
               >
-                CGPA: {education.cgpa}
-              </span>
+                {education.degree}
+              </h3>
+              <p
+                style={{
+                  color: "#00E5FF",
+                  fontSize: "1.05rem",
+                  fontWeight: 500,
+                  marginBottom: "0.75rem",
+                  fontFamily: "var(--font-space-grotesk)"
+                }}
+              >
+                {education.university}
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1.25rem",
+                  color: "#94A3B8",
+                  fontSize: "0.9rem",
+                  flexWrap: "wrap"
+                }}
+                className="edu-meta"
+              >
+                <span style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                  <MapPin size={14} style={{ color: "#475569" }} />
+                  {education.location}
+                </span>
+
+                <span
+                  style={{
+                    fontFamily: "var(--font-jetbrains-mono)",
+                    background: "rgba(0, 229, 255, 0.05)",
+                    color: "#00E5FF",
+                    padding: "0.2rem 0.6rem",
+                    borderRadius: "4px",
+                    border: "1px solid rgba(0, 229, 255, 0.15)",
+                  }}
+                >
+                  CGPA: {education.cgpa}
+                </span>
+
+                <span
+                  style={{
+                    fontFamily: "var(--font-jetbrains-mono)",
+                    background: "rgba(168, 85, 247, 0.05)",
+                    color: "#A855F7",
+                    padding: "0.2rem 0.6rem",
+                    borderRadius: "4px",
+                    border: "1px solid rgba(168, 85, 247, 0.15)",
+                  }}
+                >
+                  Semester: {education.semester}
+                </span>
+              </div>
             </div>
           </div>
-            </div>
-          </TiltCard>
         </motion.div>
       </div>
 
@@ -126,10 +163,10 @@ export default function Education() {
           .edu-card {
             flex-direction: column;
             text-align: center;
+            padding: 2.5rem 1.5rem !important;
           }
           .edu-meta {
             justify-content: center;
-            flex-wrap: wrap;
           }
         }
       `}</style>

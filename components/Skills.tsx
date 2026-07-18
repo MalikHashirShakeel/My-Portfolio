@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { skillCategories } from "@/lib/data";
-import { MeteorShootIn } from "./SectionAnimations";
 
 export default function Skills() {
   return (
@@ -108,10 +107,13 @@ export default function Skills() {
                 }}
               >
                 {category.skills.map((skill, skillIndex) => (
-                  <MeteorShootIn
+                  <motion.div
                     key={skill.name}
-                    index={skillIndex}
-                    catIndex={catIndex}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      borderColor: "rgba(0, 229, 255, 0.4)",
+                      boxShadow: "0 0 15px rgba(0, 229, 255, 0.15)"
+                    }}
                     style={{
                       background: "rgba(13, 33, 55, 0.5)",
                       border: "1px solid rgba(0, 180, 216, 0.12)",
@@ -145,7 +147,7 @@ export default function Skills() {
                     >
                       {skill.name}
                     </span>
-                  </MeteorShootIn>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>

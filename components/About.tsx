@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { aboutData } from "@/lib/data";
 import { useCounterAnimation } from "@/hooks/useCounterAnimation";
-import { WordsFlyIn } from "./SectionAnimations";
 
 function StatCounter({
   label,
@@ -135,7 +134,7 @@ export default function About() {
                   fontSize: "1rem",
                 }}
               >
-                <WordsFlyIn text={aboutData.bio} />
+                {aboutData.bio}
               </p>
             </div>
           </motion.div>

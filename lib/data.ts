@@ -143,6 +143,18 @@ export interface ExperienceItem {
 
 export const experienceData: ExperienceItem[] = [
   {
+    company: "Techlogix Pakistan",
+    website: "https://www.techlogix.com/",
+    role: "Data Analysis Intern",
+    period: "Jul 2026 – Present",
+    location: "Karachi, Sindh, Pakistan · On-site",
+    bullets: [
+      "Performing comprehensive data analysis on diverse datasets, with a focus on banking and financial sector data.",
+      "Developing analytical models and reports to assist banking clients and stakeholders in data-driven decision-making.",
+      "Cleaning, preprocessing, and aggregating transactional data to uncover key operational trends and performance indicators."
+    ]
+  },
+  {
     company: "National Center in Big Data and Cloud Computing",
     website: "https://ncbc.neduet.edu.pk/",
     role: "AI Research Intern",

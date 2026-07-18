@@ -3,7 +3,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink } from "lucide-react";
 import { projects } from "@/lib/data";
-import HolographicCard from "./HolographicCard";
 import MagneticButton from "./MagneticButton";
 
 const banners = [
@@ -116,27 +115,26 @@ export default function Projects() {
                   <motion.div
                     key={project.title}
                     layout
-                    initial={{ opacity: 0, rotateY: 90, y: 20 }}
-                    animate={{ opacity: 1, rotateY: 0, y: 0 }}
-                    exit={{ opacity: 0, rotateY: -90, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 30 }}
                     transition={{ 
-                      type: "spring", stiffness: 100, damping: 20,
+                      duration: 0.5,
                       delay: i * 0.05 
                     }}
-                    style={{ height: "100%", perspective: 1000 }}
+                    style={{ height: "100%" }}
                   >
-                    <HolographicCard>
-                      <div
-                        className="glass-card"
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          height: "100%",
-                          position: "relative",
-                          overflow: "hidden",
-                          paddingBottom: "1.5rem"
-                        }}
-                      >
+                    <div
+                      className="glass-card"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                        position: "relative",
+                        overflow: "hidden",
+                        paddingBottom: "1.5rem"
+                      }}
+                    >
                       {/* Top Gradient Banner */}
                       <div
                         style={{
@@ -295,7 +293,6 @@ export default function Projects() {
                       </div>
 
                     </div>
-                    </HolographicCard>
                   </motion.div>
                 );
               })}

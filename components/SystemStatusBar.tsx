@@ -1,83 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function SystemStatusBar() {
-  const [time, setTime] = useState("");
-  const [location, setLocation] = useState("LOCATING...");
-  const [fps, setFps] = useState(60);
-  const [sysLoad, setSysLoad] = useState(12);
+  const timeRef = useRef<HTMLSpanElement>(null);
+  const fpsRef = useRef<HTMLSpanElement>(null);
+  const loadRef = useRef<HTMLSpanElement>(null);
+  const locationRef = useRef<HTMLSpanElement>(null);
 
-  // Update Clock
   useEffect(() => {
-    const updateClock = () => {
+    // Skip on mobile - the bar is hidden via CSS
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (isMobile) return;
+
+    // Live Clock – update via DOM to avoid re-renders
+    const clockInterval = setInterval(() => {
+      if (!timeRef.current) return;
       const now = new Date();
-      const hrs = String(now.getHours()).padStart(2, "0");
-      const mins = String(now.getMinutes()).padStart(2, "0");
-      const secs = String(now.getSeconds()).padStart(2, "0");
-      setTime(`${hrs}:${mins}:${secs}`);
-    };
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      timeRef.current.textContent = `${h}:${m}:${s}`;
+    }, 1000);
 
-    updateClock();
-    const interval = setInterval(updateClock, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch Location
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        if (data.city) {
-          setLocation(data.city.toUpperCase() + "_NODE");
-        } else {
-          setLocation("UNKNOWN_NODE");
-        }
-      } catch (err) {
-        setLocation("UNKNOWN_NODE");
-      }
-    };
-
-    fetchLocation();
-  }, []);
-
-  // Measure Real-time Browser FPS
-  useEffect(() => {
+    // FPS meter via RAF
     let frameCount = 0;
     let lastTime = performance.now();
     let rafId: number;
-
-    const measure = () => {
+    const measureFps = () => {
       frameCount++;
       const now = performance.now();
-      const elapsed = now - lastTime;
-      if (elapsed >= 1000) {
-        setFps(Math.round((frameCount * 1000) / elapsed));
+      if (now - lastTime >= 1000) {
+        const fps = Math.round((frameCount * 1000) / (now - lastTime));
+        if (fpsRef.current) fpsRef.current.textContent = String(fps);
         frameCount = 0;
         lastTime = now;
       }
-      rafId = requestAnimationFrame(measure);
+      rafId = requestAnimationFrame(measureFps);
     };
+    rafId = requestAnimationFrame(measureFps);
 
-    rafId = requestAnimationFrame(measure);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
+    // Simulated system load
+    let currentLoad = 12;
+    const loadInterval = setInterval(() => {
+      const delta = Math.round((Math.random() - 0.5) * 4);
+      currentLoad = Math.max(6, Math.min(22, currentLoad + delta));
+      if (loadRef.current) loadRef.current.textContent = `${currentLoad}%`;
+    }, 2500);
 
-  // Fluctuating Simulated System Load
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSysLoad((prev) => {
-        const delta = Math.round((Math.random() - 0.5) * 4);
-        return Math.max(6, Math.min(22, prev + delta));
+    // Fetch location once
+    fetch("https://ipapi.co/json/")
+      .then((r) => r.json())
+      .then((d) => {
+        if (locationRef.current && d.city) {
+          locationRef.current.textContent = d.city.toUpperCase() + "_NODE";
+        }
+      })
+      .catch(() => {
+        if (locationRef.current) locationRef.current.textContent = "UNKNOWN_NODE";
       });
-    }, 2000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(clockInterval);
+      clearInterval(loadInterval);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
     <div
+      className="system-status-bar"
       style={{
         position: "fixed",
         bottom: 0,
@@ -101,49 +93,38 @@ export default function SystemStatusBar() {
         letterSpacing: "0.05em",
       }}
     >
-      {/* Left: Blinking green dot + Status + FPS */}
+      {/* Left: Status + FPS */}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span
             style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
+              width: 6, height: 6, borderRadius: "50%",
               backgroundColor: "#10B981",
               boxShadow: "0 0 8px #10B981",
               animation: "pulse-green 2s infinite ease-in-out",
+              display: "inline-block"
             }}
           />
           <span>SYSTEMS ONLINE</span>
         </div>
         <span style={{ color: "#475569" }}>|</span>
-        <div>
-          <span>RENDER_FPS: <span style={{ color: "#00E5FF" }}>{fps}</span></span>
-        </div>
+        <span>RENDER_FPS: <span ref={fpsRef} style={{ color: "#00E5FF" }}>--</span></span>
         <style dangerouslySetInnerHTML={{
           __html: `
-            @keyframes pulse-green {
-              0%, 100% { opacity: 0.4; }
-              50% { opacity: 1; }
-            }
+            @keyframes pulse-green { 0%,100%{opacity:0.4}50%{opacity:1} }
+            @media(max-width:767px){.system-status-bar{display:none!important}}
           `
         }} />
       </div>
 
-      {/* Center: Live Clock */}
-      <div>
-        <span>LOCAL_TIME: <span style={{ color: "#E2E8F0" }}>{time || "00:00:00"}</span></span>
-      </div>
+      {/* Center: Clock */}
+      <div>LOCAL_TIME: <span ref={timeRef} style={{ color: "#E2E8F0" }}>--:--:--</span></div>
 
-      {/* Right: City Node + Telemetry Load */}
+      {/* Right: Load + Node */}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div>
-          <span>SYS_LOAD: <span style={{ color: "#00E5FF" }}>{sysLoad}%</span></span>
-        </div>
+        <span>SYS_LOAD: <span ref={loadRef} style={{ color: "#00E5FF" }}>--</span></span>
         <span style={{ color: "#475569" }}>|</span>
-        <div>
-          <span>NODE: <span style={{ color: "#00E5FF" }}>{location}</span></span>
-        </div>
+        <span>NODE: <span ref={locationRef} style={{ color: "#00E5FF" }}>LOCATING...</span></span>
       </div>
     </div>
   );

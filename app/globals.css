@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* ===== CSS VARIABLES ===== */
 :root {
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
+
   --bg-space: #060B1A;
   --bg-navy: #0A1628;
   --bg-blue: #0D2137;
@@ -70,6 +75,8 @@ body {
   border: 1px solid var(--border-glass);
   border-radius: 16px;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  contain: layout style;
+  will-change: transform;
 }
 
 .glass-card:hover {
@@ -236,5 +243,42 @@ body {
   }
   .scanline-overlay, .pulse-green {
     animation: none !important;
+  }
+}
+
+/* ===== MOBILE TOUCH DEVICE PERFORMANCE ===== */
+@media (pointer: coarse) {
+  /* Kill expensive GPU overlays on touch devices */
+  .scanline-overlay,
+  .noise-overlay {
+    display: none !important;
+  }
+  /* Remove expensive backdrop-filter on mobile */
+  .glass-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(13, 33, 55, 0.85);
+  }
+  /* Disable grid pattern background on mobile */
+  .grid-pattern-overlay {
+    background-image: none !important;
+  }
+  /* No hover transform on touch (prevents sticky hover) */
+  .glass-card:hover {
+    transform: none;
+  }
+  /* Layout containment for sections */
+  .section-container {
+    contain: content;
+  }
+}
+
+/* ===== SMALL SCREEN RESPONSIVE ===== */
+@media (max-width: 767px) {
+  .section-container {
+    padding: 4rem 1rem;
+  }
+  .skills-constellations {
+    grid-template-columns: 1fr !important;
   }
 }

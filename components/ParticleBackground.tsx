@@ -1,134 +1,114 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-
-interface Star {
-  x: number;
-  y: number;
-  size: number;
-  color: string;
-  speedY: number; // drift speed
-  layer: number;  // 1 (deep), 2 (mid), 3 (close)
-}
+import { useEffect, useRef } from "react";
 
 export default function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    // Check prefers-reduced-motion
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mediaQuery.matches);
-    const listener = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
-    mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    let animId: number;
-    let stars: Star[] = [];
+    // Mobile detection (no setState, no re-render)
+    const isMobile = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Track scroll
+    // On mobile skip all canvas work entirely — static bg CSS handles background
+    if (isMobile) return;
+
+    let animId: number;
+    let stars: Array<{ x: number; y: number; size: number; r: number; g: number; b: number; a: number; speed: number; layer: number }> = [];
     let currentScrollY = 0;
-    const handleScroll = () => {
-      currentScrollY = window.scrollY;
-    };
+
+    const handleScroll = () => { currentScrollY = window.scrollY; };
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Track cursor
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-
     const initCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
 
-      // Determine star count based on screen size
-      const isMobile = window.innerWidth < 768;
-      const count = isMobile ? 60 : 200;
-
+      // Reduced star count for better performance
+      const count = 140;
       stars = [];
       for (let i = 0; i < count; i++) {
         const layer = Math.random() < 0.6 ? 1 : Math.random() < 0.85 ? 2 : 3;
-        let size = 1;
-        let speedY = 0.05;
-        let color = "rgba(226, 232, 240, "; // default starlight
+        const size = layer === 1 ? 1 : layer === 2 ? 1.5 : 2.5;
+        const speed = layer === 1 ? 0.04 : layer === 2 ? 0.08 : 0.12;
 
-        if (layer === 2) {
-          size = 2;
-          speedY = 0.1;
-          color = Math.random() < 0.3 ? "rgba(0, 180, 216, " : "rgba(226, 232, 240, "; // cyan or white
-        } else if (layer === 3) {
-          size = 3;
-          speedY = 0.15;
-          color = Math.random() < 0.5 ? "rgba(0, 229, 255, " : "rgba(168, 85, 247, "; // neon cyan or violet
+        // Pre-compute rgba parts for fast rendering
+        let r = 226, g = 232, b = 240;
+        if (layer === 2 && Math.random() < 0.3) { r = 0; g = 180; b = 216; }
+        if (layer === 3) {
+          if (Math.random() < 0.5) { r = 0; g = 229; b = 255; }
+          else { r = 168; g = 85; b = 247; }
         }
+        const a = Math.random() * 0.4 + 0.3;
 
         stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size,
-          color: color + (Math.random() * 0.4 + 0.3) + ")",
-          speedY,
-          layer,
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          size, speed, layer, r, g, b, a
         });
       }
     };
 
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initCanvas, 200);
+    };
+
     initCanvas();
-    window.addEventListener("resize", initCanvas);
+    window.addEventListener("resize", handleResize);
+
+    const BG_COLOR = "#060B1A";
 
     const draw = () => {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+
+      ctx.fillStyle = BG_COLOR;
+      ctx.fillRect(0, 0, W, H);
 
       if (reduceMotion) {
-        // Just draw static stars in reduced motion mode
-        stars.forEach((star) => {
+        // Static snapshot — no animation frame needed
+        stars.forEach((s) => {
           ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          ctx.fillStyle = star.color;
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${s.r},${s.g},${s.b},${s.a})`;
           ctx.fill();
         });
-        return;
+        return; // Do NOT call requestAnimationFrame
       }
 
-      stars.forEach((star) => {
-        // Apply drifting speed
-        star.y -= star.speedY;
+      // Animated drawing loop
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        s.y -= s.speed;
+        if (s.y < 0) s.y = H;
 
-        // Apply scroll parallax effect
-        // Layer 1 moves very slowly, Layer 3 moves faster with scroll
-        const parallaxOffset = currentScrollY * (star.layer * 0.08);
-        const displayY = (star.y - parallaxOffset + canvas.height) % canvas.height;
+        const parallax = currentScrollY * s.layer * 0.06;
+        const displayY = ((s.y - parallax) % H + H) % H;
 
-        // Wrap around boundaries
-        if (star.y < 0) star.y = canvas.height;
-
-        ctx.beginPath();
-        ctx.arc(star.x, displayY, star.size, 0, Math.PI * 2);
-        ctx.fillStyle = star.color;
-
-        // Soft outer glow for larger stars
-        if (star.size > 1) {
+        // Only shadowBlur for layer-3 stars on desktop to keep perf up
+        if (s.size > 2) {
           ctx.shadowBlur = 4;
-          ctx.shadowColor = star.color;
+          ctx.shadowColor = `rgba(${s.r},${s.g},${s.b},0.6)`;
         } else {
           ctx.shadowBlur = 0;
         }
 
+        ctx.beginPath();
+        ctx.arc(s.x, displayY, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${s.r},${s.g},${s.b},${s.a})`;
         ctx.fill();
-      });
-
-      // Clear shadow properties for performance
+      }
       ctx.shadowBlur = 0;
 
       animId = requestAnimationFrame(draw);
@@ -138,43 +118,23 @@ export default function ParticleBackground() {
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("resize", initCanvas);
+      clearTimeout(resizeTimer);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [reduceMotion]);
+  }, []);
 
   return (
-    <>
-      {/* Starfield Canvas */}
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-          background: "#060B1A",
-        }}
-      />
-
-      {/* Glowing Cursor Trail */}
-      {!reduceMotion && (
-        <div
-          style={{
-            position: "fixed",
-            left: cursorPos.x - 15,
-            top: cursorPos.y - 15,
-            width: "30px",
-            height: "30px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%)",
-            pointerEvents: "none",
-            zIndex: 9999,
-            transition: "left 0.12s cubic-bezier(0.25, 1, 0.5, 1), top 0.12s cubic-bezier(0.25, 1, 0.5, 1)",
-          }}
-        />
-      )}
-    </>
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+        background: "#060B1A",
+      }}
+    />
   );
 }

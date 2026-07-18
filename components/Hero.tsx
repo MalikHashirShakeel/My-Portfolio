@@ -112,13 +112,10 @@ export default function Hero() {
             </MagneticButton>
             <MagneticButton>
               <a
-                href="/resume.pdf"
-                download="Malik_Hashir_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/resume"
                 className="btn-secondary"
               >
-                Download CV
+                Resume
                 <Download size={16} />
               </a>
             </MagneticButton>
@@ -191,6 +188,11 @@ export default function Hero() {
           .hero-orbit-container {
             margin-top: 2rem;
             order: 2;
+          }
+        }
+        @media (max-width: 767px) {
+          .hero-orbit-container {
+            display: none !important;
           }
         }
       `}</style>

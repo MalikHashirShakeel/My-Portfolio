@@ -166,6 +166,7 @@ export default function NeuralNetwork() {
 
   // Stats timers
   useEffect(() => {
+    if (isMobile) return;
     const connInterval = setInterval(() => {
       setActiveConns((c) => {
         const delta = Math.random() > 0.5 ? 1 : -1;
@@ -181,7 +182,7 @@ export default function NeuralNetwork() {
       clearInterval(connInterval);
       clearInterval(inferInterval);
     };
-  }, []);
+  }, [isMobile]);
 
   /* ---------------------------------------------------------------- */
   /*  Canvas animation                                                 */
@@ -196,10 +197,11 @@ export default function NeuralNetwork() {
   // Build node map for quick lookup
   const nodeMapRef = useRef<Map<string, SkillNode>>(new Map());
   useEffect(() => {
+    if (isMobile) return;
     const map = new Map<string, SkillNode>();
     FULL_NODES.forEach((n) => map.set(n.id, n));
     nodeMapRef.current = map;
-  }, []);
+  }, [isMobile]);
 
   const getNodePos = useCallback(
     (node: SkillNode, w: number, h: number, time: number) => {
@@ -217,6 +219,7 @@ export default function NeuralNetwork() {
   );
 
   useEffect(() => {
+    if (isMobile) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -320,9 +323,9 @@ export default function NeuralNetwork() {
       const SHOCKWAVE_SPEED = 200; // px/s
       const SHOCKWAVE_MAX = 400;
       shockwavesRef.current = shockwavesRef.current.filter((sw) => {
-        const elapsed = (now - sw.startTime) / 1000;
+        const elapsed = Math.max(0, (now - sw.startTime) / 1000);
         sw.radius = elapsed * SHOCKWAVE_SPEED;
-        sw.alpha = 1 - sw.radius / SHOCKWAVE_MAX;
+        sw.alpha = Math.max(0, 1 - sw.radius / SHOCKWAVE_MAX);
 
         // Activate nodes the ring passes through
         if (sw.alpha > 0) {
@@ -508,6 +511,10 @@ export default function NeuralNetwork() {
   /* ---------------------------------------------------------------- */
   /*  Render                                                           */
   /* ---------------------------------------------------------------- */
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div

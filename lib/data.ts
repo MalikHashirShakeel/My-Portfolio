@@ -316,14 +316,47 @@ export const certifications: Certification[] = [
   },
 ];
 
-/* ====== EDUCATION ====== */
-export const education = {
-  university: "NED University of Engineering & Technology",
-  location: "Karachi, Pakistan",
-  degree: "B.E. Computer & Information Systems Engineering",
-  cgpa: "3.84",
-  semester: "7th"
-};
+export interface EducationItem {
+  institution: string;
+  location: string;
+  degree: string;
+  period: string;
+  grade: string;
+  description: string;
+  cgpa?: string;
+  semester?: string;
+  transcript?: string;
+}
+
+export const educationData: EducationItem[] = [
+  {
+    institution: "NED University of Engineering & Technology",
+    location: "Karachi, Pakistan",
+    degree: "B.E. Computer & Information Systems Engineering",
+    period: "Nov 2022 – Present",
+    grade: "A*",
+    description: "Currently in the 7th semester of B.E. in Computer & Information Systems Engineering. Specializing in AI, Deep Learning, and System Architecture.",
+    cgpa: "3.84",
+    semester: "7th",
+    transcript: "/transcript"
+  },
+  {
+    institution: "DJ Sindh Government Science College",
+    location: "Karachi, Pakistan",
+    degree: "Pre-Engineering",
+    period: "Aug 2021 – Aug 2023",
+    grade: "A*",
+    description: "Done intermediate in Pre-Engineering from DJ Sindh Government Science College, Karachi and achieved a percentage of 84.00%."
+  },
+  {
+    institution: "Al Burhan Model High School",
+    location: "Karachi, Pakistan",
+    degree: "Matriculation",
+    period: "Jun 2010 – Jun 2021",
+    grade: "A*",
+    description: "Have done my SSC from Al Burhan Model High School and Achieved a percentage of 96%."
+  }
+];
 
 /* ====== CONTACT ====== */
 export const contactInfo = {
